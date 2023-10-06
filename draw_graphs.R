@@ -18,3 +18,5 @@ boxplot(data$V1, data$V2, data$V3, data$V4,
         names = c('variance of Wavelet\nTransformed image', 'skewness of Wavelet\nTransformed image', 'curtosis of Wavelet\nTransformed image', 'entropy of image'), 
         xlab = 'Features', 
         main='With normalization')
+
+barplot(table(data$V5), name = c('Authentic', 'Fake'))
