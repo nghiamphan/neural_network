@@ -164,6 +164,7 @@ class NN:
             Log loss on test data at the end of the training
         """
         scores = []
+        self.reset_weight()
         for epoch in range(1, epochs + 1):
             for i in range(len(X)):
                 dw = self.backward_propagation(X[i], y[i], l2)
@@ -190,6 +191,7 @@ class NN:
         Same as method quick_train()
         """
         scores = []
+        self.reset_weight()
         for epoch in range(1, epochs + 1):
             dw = self.backward_propagation(X, y, l2)
             self.w += learning_rate * dw
@@ -227,7 +229,6 @@ class NN:
             X = np.vstack((self.X_train[: i * n], self.X_train[(i + 1) * n :]))
             y = np.hstack((self.y_train[: i * n], self.y_train[(i + 1) * n :]))
 
-            self.reset_weight()
             test_log_loss += self.quick_train(X, y, epochs, learning_rate, l2)
 
         test_log_loss /= k_fold
@@ -422,6 +423,7 @@ class NN2(NN):
             Log loss on test data at the end of the training
         """
         scores = []
+        self.reset_weight()
         for epoch in range(1, epochs + 1):
             for i in range(len(X)):
                 dw2, DW1 = self.backward_propagation(X[i], y[i], l2_1, l2_2)
@@ -453,6 +455,7 @@ class NN2(NN):
         Same as method quick_train()
         """
         scores = []
+        self.reset_weight()
         for epoch in range(1, epochs + 1):
             dw2, DW1 = self.backward_propagation(X, y, l2_1, l2_2)
             self.w2 += learning_rate_2 * dw2
@@ -485,7 +488,6 @@ class NN2(NN):
             X = np.vstack((self.X_train[: i * n], self.X_train[(i + 1) * n :]))
             y = np.hstack((self.y_train[: i * n], self.y_train[(i + 1) * n :]))
 
-            self.reset_weight()
             test_log_loss += self.quick_train(X, y, epochs, learning_rate_1, learning_rate_2, l2_1, l2_2)
 
         test_log_loss /= k_fold
@@ -500,21 +502,43 @@ sklearn_logistic_reg(X_train, X_test, y_train, y_test)
 
 
 nn = NN()
-nn.import_data(X_train, X_test, y_train, y_test, normalization=False)
-# nn.quick_train(nn.X_train, nn.y_train, epochs=20, learning_rate=0.2, l2=0.001, print_result=True)
-# nn.slow_train(nn.X_train, nn.y_train, epochs=100, learning_rate=1, l2=0.01, print_result=True)
+nn.import_data(X_train, X_test, y_train, y_test, normalization=True)
+# nn.quick_train(nn.X_train, nn.y_train, epochs=100, learning_rate=0.2, l2=0.00, print_result=True)
+# nn.slow_train(nn.X_train, nn.y_train, epochs=100, learning_rate=0.2, l2=0.00, print_result=True)
+# nn.slow_train(nn.X_train, nn.y_train, epochs=100, learning_rate=1, l2=0.00, print_result=True)
+# nn.slow_train(nn.X_train, nn.y_train, epochs=100, learning_rate=5, l2=0.00, print_result=True)
 # nn.cross_validation(k_fold=10, epochs=20, learning_rate=0.2, l2=0)
 
 
 nn2 = NN2(4)
 nn2.import_data(X_train, X_test, y_train, y_test, normalization=True)
+# nn2.quick_train(
+#     nn2.X_train,
+#     nn2.y_train,
+#     epochs=100,
+#     learning_rate_1=0.2,
+#     learning_rate_2=0.2,
+#     l2_1=0.0,
+#     l2_2=0.0,
+#     print_result=True,
+# )
+# nn2.quick_train(
+#     nn2.X_train,
+#     nn2.y_train,
+#     epochs=100,
+#     learning_rate_1=0.2,
+#     learning_rate_2=0.2,
+#     l2_1=0.001,
+#     l2_2=0.001,
+#     print_result=True,
+# )
 nn2.quick_train(
     nn2.X_train,
     nn2.y_train,
-    epochs=20,
+    epochs=100,
     learning_rate_1=0.2,
     learning_rate_2=0.2,
-    l2_1=0.00,
+    l2_1=0.01,
     l2_2=0.01,
     print_result=True,
 )
@@ -522,12 +546,37 @@ nn2.quick_train(
 #     nn2.X_train,
 #     nn2.y_train,
 #     epochs=100,
-#     learning_rate_1=1,
-#     learning_rate_2=1,
-#     l2_1=0.01,
-#     l2_2=0.01,
+#     learning_rate_1=0.2,
+#     learning_rate_2=0.2,
+#     l2_1=0.0,
+#     l2_2=0.0,
 #     print_result=True,
 # )
+# nn2.slow_train(
+#     nn2.X_train,
+#     nn2.y_train,
+#     epochs=100,
+#     learning_rate_1=1,
+#     learning_rate_2=1,
+#     l2_1=0.0,
+#     l2_2=0.0,
+#     print_result=True,
+# )
+# nn2.slow_train(
+#     nn2.X_train,
+#     nn2.y_train,
+#     epochs=100,
+#     learning_rate_1=5,
+#     learning_rate_2=5,
+#     l2_1=0.0,
+#     l2_2=0.0,
+#     print_result=True,
+# )
+
+# Tuning l2
+# l2s = [0.001, 0.005, 0.01, 0.1]
+# for l2 in l2s:
+#     nn2.cross_validation(k_fold=10, epochs=20, learning_rate_1=0.2, learning_rate_2=0.2, l2_1=l2, l2_2=l2)
 
 # nn2.cross_validation(k_fold=10, epochs=20, learning_rate_1=0.2, learning_rate_2=0.2, l2_1=0, l2_2=0.01)
 # nn2.cross_validation(k_fold=10, epochs=20, learning_rate_1=0.2, learning_rate_2=0.2, l2_1=0.001, l2_2=0.01)
